@@ -16,7 +16,15 @@ export async function GET(req: Request) {
       headers: { "cache-control": "public, s-maxage=600, stale-while-revalidate=3600" },
     });
   } catch (err) {
-    const status = err instanceof UserError ? err.status : /private|local|only ports|only http|credentials/.test((err as Error).message) ? 400 : 502;
-    return NextResponse.json({ error: (err as Error).message }, { status, headers: { "cache-control": "no-store" } });
+    const message = (err as Error).message;
+    const status =
+      err instanceof UserError
+        ? err.status
+        : (err as Error).name === "TargetBlockedError"
+          ? 422
+          : /private|local|only ports|only http|credentials/.test(message)
+            ? 400
+            : 502;
+    return NextResponse.json({ error: message }, { status, headers: { "cache-control": "no-store" } });
   }
 }

@@ -122,9 +122,6 @@ export async function scan(target: string, opts: ScanOptions = {}): Promise<Scan
       frameworks = crawled.frameworks;
       errors.push(...crawled.errors);
       if (want("secrets") && crawled.sourceMaps.length) findings.push(sourceMapFinding(crawled.sourceMaps, false));
-      if (crawled.page && crawled.page.status >= 400) {
-        errors.push(`${resolvedTarget} answered HTTP ${crawled.page.status}`);
-      }
       if (want("headers") && crawled.page) await checkHeaders(http, crawled.page, ctx);
       if (want("exposure")) await checkExposure(http, new URL(resolvedTarget).origin, ctx);
     }

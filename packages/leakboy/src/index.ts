@@ -5,5 +5,6 @@ export { formatMarkdown } from "./report/markdown.js";
 export { formatSarif } from "./report/sarif.js";
 export { SECRET_RULES, maskSecret } from "./rules/secrets.js";
 export { isPrivateAddress, BlockedTargetError } from "./http.js";
+export { TargetBlockedError } from "./crawler.js";
 export { VERSION } from "./version.js";
 export * from "./types.js";

@@ -3,6 +3,15 @@
 All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- No longer gives a score when the target answers with an error or a bot challenge (Vercel Security Checkpoint,
+  Vercel Deployment Protection, Cloudflare, Netlify password). It explains why and suggests scanning the build folder.
+- Folder scans skip output that is never deployed (`.next/dev`, `.next/server`, `.next/cache`, Nitro/SvelteKit
+  server output), also when the folder itself is passed (`npx leakboy .next`).
+
 ## [0.1.0] - 2026-11-16
 
 ### Added

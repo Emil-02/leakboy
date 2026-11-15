@@ -172,10 +172,40 @@ function looksLikeHtml(res: HttpResponse): boolean {
   return /^\s*<(!doctype|html)/i.test(res.text().slice(0, 200));
 }
 
+/** Thrown when the target answers with an error or a bot challenge instead of the app, so a score would be meaningless. */
+export class TargetBlockedError extends Error {
+  override name = "TargetBlockedError";
+}
+
+const CHALLENGES: Array<[string, (page: HttpResponse, head: string) => boolean]> = [
+  ["Vercel Security Checkpoint (bot protection)", (p, h) => p.headers.get("x-vercel-mitigated") === "challenge" || /Vercel Security Checkpoint/i.test(h)],
+  ["Vercel Deployment Protection (login required)", (p, h) => p.status === 401 && /vercel/i.test(p.headers.get("server") ?? "") && /Authentication Required|vercel\.com\/sso/i.test(h)],
+  ["Cloudflare challenge", (p, h) => p.headers.has("cf-mitigated") || /<title>Just a moment\.\.\.<\/title>|challenges\.cloudflare\.com\/cdn-cgi|cf-chl-/i.test(h)],
+  ["Netlify password protection", (_p, h) => /netlify/i.test(h) && /password protected/i.test(h)],
+];
+
+/** Explains why a fetched page is not the real app, or returns undefined. */
+export function blockedReason(page: HttpResponse): string | undefined {
+  const head = page.text().slice(0, 20_000);
+  const challenge = CHALLENGES.find(([, test]) => test(page, head))?.[0];
+  if (challenge) return `${challenge}, HTTP ${page.status}`;
+  if (page.status >= 400) return `HTTP ${page.status}`;
+  return undefined;
+}
+
 export async function crawl(http: HttpClient, target: string, opts: CrawlOptions): Promise<CrawlResult> {
   const result: CrawlResult = { finalUrl: target, files: [], sourceMaps: [], frameworks: [], errors: [] };
   opts.onProgress?.(`Fetching ${target}`);
   const page = await http.request(target, { headers: { accept: "text/html,*/*" } });
+  const blocked = blockedReason(page);
+  if (blocked) {
+    throw new TargetBlockedError(
+      `${page.url} did not return the app (${blocked}), so leakboy cannot give a score. ` +
+        "Bot protection stops simple scripts, but attackers can use real browsers, and your Supabase/API endpoints are usually not behind it. " +
+        "Scan the build output instead (e.g. `npm run build && npx leakboy .next` or `npx leakboy dist`), " +
+        "or scan a preview deployment/domain without the challenge.",
+    );
+  }
   result.page = page;
   result.finalUrl = page.url;
   const origin = new URL(page.url);

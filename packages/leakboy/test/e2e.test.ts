@@ -97,8 +97,14 @@ describe("local build scan", () => {
       await writeFile(join(dir, ".next/static/chunks/main.js"), `const k="${vuln.secrets.stripe}";`);
       await writeFile(join(dir, ".next/static/chunks/main.js.map"), JSON.stringify({ version: 3, mappings: "A", sources: ["src/a.ts"], sourcesContent: ["x"] }));
       await writeFile(join(dir, ".next/server/route.js"), `const k="${vuln.secrets.openai}";`);
+      await mkdir(join(dir, ".next/dev/static/chunks"), { recursive: true });
+      await writeFile(join(dir, ".next/dev/static/chunks/dev.js.map"), JSON.stringify({ version: 3, mappings: "A", sources: ["d.ts"], sourcesContent: ["y"] }));
       const result = await scan(dir, { noProbe: true });
       expect(result.mode).toBe("local");
+      // Pointing at .next itself must classify server/dev output the same way.
+      const inner = await scan(join(dir, ".next"), { noProbe: true });
+      expect(inner.findings.map((f) => f.ruleId).sort()).toEqual(["secrets/source-maps", "secrets/stripe-secret-live"]);
+      expect(inner.findings.find((f) => f.ruleId === "secrets/source-maps")?.title).toMatch(/^1 source map/);
       const ids = result.findings.map((f) => f.ruleId);
       expect(ids).toContain("secrets/stripe-secret-live");
       expect(ids).toContain("secrets/source-maps");
@@ -122,6 +128,30 @@ describe("cli", () => {
       expect(JSON.parse(ok.stdout).score.grade).toBe("A");
     } finally {
       await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("blocked targets", () => {
+  it.each([
+    [403, { "x-vercel-mitigated": "challenge" }, "<title>Vercel Security Checkpoint</title>", /Vercel Security Checkpoint/],
+    [403, { "cf-mitigated": "challenge" }, "<title>Just a moment...</title>", /Cloudflare/],
+    [500, {}, "oops", /HTTP 500/],
+  ])("refuses to score a %s challenge/error page", async (status, headers, body, reason) => {
+    const { createServer } = await import("node:http");
+    const server = createServer((_req, res) => {
+      res.writeHead(status, { "content-type": "text/html", ...headers });
+      res.end(body);
+    });
+    await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
+    const port = (server.address() as { port: number }).port;
+    try {
+      const err = await scan(`http://127.0.0.1:${port}/`, { allowPrivateNetworks: true }).catch((e) => e);
+      expect(err.name).toBe("TargetBlockedError");
+      expect(err.message).toMatch(reason);
+      expect(err.message).toMatch(/cannot give a score/);
+    } finally {
+      server.close();
     }
   });
 });
