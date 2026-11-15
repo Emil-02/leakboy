@@ -1,0 +1,83 @@
+name: leakboy
+description: Scan a deployed (preview) URL or a build folder for leaks – open Supabase RLS, open Firebase rules, secrets in bundles and source maps, exposed .env/.git.
+author: Emil-02
+branding:
+  icon: shield
+  color: orange
+
+inputs:
+  target:
+    description: URL (e.g. your Vercel preview URL) or build folder (e.g. ./dist) to scan
+    required: true
+  fail-under:
+    description: Fail the step when the score is below this number (0-100). 0 never fails.
+    required: false
+    default: "0"
+  only:
+    description: Comma-separated categories (secrets,supabase,firebase,exposure,headers). Empty = all.
+    required: false
+    default: ""
+  sarif:
+    description: Path to write a SARIF file to (upload it with github/codeql-action/upload-sarif). Empty = skip.
+    required: false
+    default: ""
+  version:
+    description: leakboy version from npm (e.g. 0.1.0 or latest), or "source" to build this action's checkout.
+    required: false
+    default: latest
+
+outputs:
+  score:
+    description: Score from 0 to 100
+    value: ${{ steps.scan.outputs.score }}
+  grade:
+    description: Grade A-F
+    value: ${{ steps.scan.outputs.grade }}
+  report:
+    description: Path to the Markdown report
+    value: ${{ steps.scan.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Build leakboy from source
+      if: inputs.version == 'source'
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci --no-audit --no-fund && npm run build:cli
+
+    - name: Scan
+      id: scan
+      shell: bash
+      env:
+        LB_TARGET: ${{ inputs.target }}
+        LB_FAIL_UNDER: ${{ inputs.fail-under }}
+        LB_ONLY: ${{ inputs.only }}
+        LB_SARIF: ${{ inputs.sarif }}
+        LB_VERSION: ${{ inputs.version }}
+        LB_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        if [ "$LB_VERSION" = "source" ]; then
+          cmd=(node "$LB_ACTION_PATH/packages/leakboy/dist/cli.js")
+        else
+          cmd=(npx --yes "leakboy@$LB_VERSION")
+        fi
+        args=("$LB_TARGET" --json --markdown "$RUNNER_TEMP/leakboy-report.md")
+        [ -n "$LB_ONLY" ] && args+=(--only "$LB_ONLY")
+        [ -n "$LB_SARIF" ] && args+=(--sarif "$LB_SARIF")
+        "${cmd[@]}" "${args[@]}" > "$RUNNER_TEMP/leakboy.json"
+        score=$(node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).score.score)' "$RUNNER_TEMP/leakboy.json")
+        grade=$(node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).score.grade)' "$RUNNER_TEMP/leakboy.json")
+        echo "score=$score" >> "$GITHUB_OUTPUT"
+        echo "grade=$grade" >> "$GITHUB_OUTPUT"
+        echo "report=$RUNNER_TEMP/leakboy-report.md" >> "$GITHUB_OUTPUT"
+        cat "$RUNNER_TEMP/leakboy-report.md" >> "$GITHUB_STEP_SUMMARY"
+        echo "leakboy: grade $grade ($score/100)"
+        if [ "$score" -lt "$LB_FAIL_UNDER" ]; then
+          echo "::error title=leakboy::Score $score is below fail-under $LB_FAIL_UNDER"
+          exit 1
+        fi

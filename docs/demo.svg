@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="906" viewBox="0 0 900 906" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13.5">
+<rect width="900" height="906" rx="10" fill="#0b0d12"/>
+<rect width="900" height="32" rx="10" fill="#161b26"/><rect y="22" width="900" height="10" fill="#161b26"/>
+<circle cx="20" cy="16" r="6" fill="#ff5f57"/><circle cx="40" cy="16" r="6" fill="#febc2e"/><circle cx="60" cy="16" r="6" fill="#28c840"/>
+<text x="20" y="58" fill="#e6e9ef" xml:space="preserve">$ npx leakboy https://my-vibe-app.vercel.app</text>
+<text x="20" y="77" fill="#e6e9ef" xml:space="preserve"></text>
+<text x="20" y="96" fill="#e6e9ef" font-weight="700" xml:space="preserve">  leakboy v0.1.0  →  https://my-vibe-app.vercel.app/</text>
+<text x="20" y="115" fill="#e6e9ef" xml:space="preserve">  Next.js · Supabase ×1 · Firebase ×1 · 2 script(s) · 62 request(s) · 4.2s</text>
+<text x="20" y="134" fill="#e6e9ef" xml:space="preserve"></text>
+<text x="20" y="153" fill="#ff4d5e" font-weight="700" xml:space="preserve">  Score 0/100  grade F</text>
+<text x="20" y="172" fill="#e6e9ef" xml:space="preserve"></text>
+<text x="20" y="191" fill="#ff4d5e" font-weight="700" xml:space="preserve">  ✗ CRITICAL .env file is publicly downloadable</text>
+<text x="20" y="210" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/.env</text>
+<text x="20" y="229" fill="#ff4d5e" font-weight="700" xml:space="preserve">  ✗ CRITICAL Firestore collection "orders" is readable by anyone</text>
+<text x="20" y="248" fill="#7d8597" xml:space="preserve">             firestore://my-vibe-app/orders</text>
+<text x="20" y="267" fill="#ff4d5e" font-weight="700" xml:space="preserve">  ✗ CRITICAL Realtime Database is readable by anyone (2 top-level node(s))</text>
+<text x="20" y="286" fill="#7d8597" xml:space="preserve">             https://my-vibe-app-default-rtdb.firebaseio.com/.json</text>
+<text x="20" y="305" fill="#ff4d5e" font-weight="700" xml:space="preserve">  ✗ CRITICAL OpenAI API key exposed in client bundle</text>
+<text x="20" y="324" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/_next/static/chunks/app/page-7f3a.js</text>
+<text x="20" y="343" fill="#7d8597" xml:space="preserve">             sk-proj-••••••••rpTI</text>
+<text x="20" y="362" fill="#ff4d5e" font-weight="700" xml:space="preserve">  ✗ CRITICAL Stripe live secret key exposed in client bundle</text>
+<text x="20" y="381" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/_next/static/chunks/app/page-7f3a.js</text>
+<text x="20" y="400" fill="#7d8597" xml:space="preserve">             sk_live_••••••••10Aj</text>
+<text x="20" y="419" fill="#ff4d5e" font-weight="700" xml:space="preserve">  ✗ CRITICAL Supabase service_role key exposed in source map</text>
+<text x="20" y="438" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/_next/static/chunks/main-app.js.map -&gt; ./src/lib/admin.ts</text>
+<text x="20" y="457" fill="#7d8597" xml:space="preserve">             eyJhbGci••••••••RVRw</text>
+<text x="20" y="476" fill="#ff4d5e" font-weight="700" xml:space="preserve">  ✗ CRITICAL Table "profiles" is readable by anyone (≈1,240 row(s))</text>
+<text x="20" y="495" fill="#7d8597" xml:space="preserve">             https://xyzcompanyrefabcde.supabase.co/rest/v1/profiles</text>
+<text x="20" y="514" fill="#ff7a45" xml:space="preserve">  ✗ HIGH     .git directory is publicly downloadable</text>
+<text x="20" y="533" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/.git/config</text>
+<text x="20" y="552" fill="#ff7a45" xml:space="preserve">  ✗ HIGH     Firebase Storage bucket "my-vibe-app.appspot.com" can be listed by anyone</text>
+<text x="20" y="571" fill="#7d8597" xml:space="preserve">             gs://my-vibe-app.appspot.com</text>
+<text x="20" y="590" fill="#ff7a45" xml:space="preserve">  ✗ HIGH     CORS trusts any origin with credentials</text>
+<text x="20" y="609" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/</text>
+<text x="20" y="628" fill="#ff7a45" xml:space="preserve">  ✗ HIGH     Files in storage bucket "avatars" can be listed by anyone</text>
+<text x="20" y="647" fill="#7d8597" xml:space="preserve">             https://xyzcompanyrefabcde.supabase.co/storage/v1/object/list/avatars</text>
+<text x="20" y="666" fill="#f5c542" xml:space="preserve">  ✗ MEDIUM   1 source map(s) are public</text>
+<text x="20" y="685" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/_next/static/chunks/main-app.js.map</text>
+<text x="20" y="704" fill="#f5c542" xml:space="preserve">  ✗ MEDIUM   Anyone can create a confirmed account instantly</text>
+<text x="20" y="723" fill="#7d8597" xml:space="preserve">             https://xyzcompanyrefabcde.supabase.co/auth/v1/settings</text>
+<text x="20" y="742" fill="#4cc2ff" xml:space="preserve">  ✗ LOW      Missing Content-Security-Policy header</text>
+<text x="20" y="761" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/</text>
+<text x="20" y="780" fill="#4cc2ff" xml:space="preserve">  ✗ LOW      No clickjacking protection</text>
+<text x="20" y="799" fill="#7d8597" xml:space="preserve">             https://my-vibe-app.vercel.app/</text>
+<text x="20" y="818" fill="#4cc2ff" xml:space="preserve">  ✗ LOW      Table "products" is readable by anyone (≈12 row(s))</text>
+<text x="20" y="837" fill="#7d8597" xml:space="preserve">             https://xyzcompanyrefabcde.supabase.co/rest/v1/products</text>
+<text x="20" y="856" fill="#e6e9ef" xml:space="preserve"></text>
+<text x="20" y="875" fill="#e6e9ef" xml:space="preserve"></text>
+</svg>

@@ -1,0 +1,62 @@
+{
+  "name": "leakboy",
+  "version": "0.1.0",
+  "description": "Find the leaks in your vibe-coded app before someone else does: open Supabase RLS, open Firebase rules, secrets in JS bundles and source maps, exposed .env/.git. Passive, read-only, one command.",
+  "keywords": [
+    "security",
+    "scanner",
+    "supabase",
+    "rls",
+    "firebase",
+    "secrets",
+    "source-maps",
+    "vibe-coding",
+    "nextjs",
+    "cli"
+  ],
+  "homepage": "https://github.com/Emil-02/leakboy#readme",
+  "bugs": "https://github.com/Emil-02/leakboy/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emil-02/leakboy.git",
+    "directory": "packages/leakboy"
+  },
+  "license": "MIT",
+  "author": "Emil Rahmat",
+  "type": "module",
+  "bin": {
+    "leakboy": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build && cp ../../README.md ../../LICENSE ."
+  },
+  "engines": {
+    "node": ">=22.19"
+  },
+  "dependencies": {
+    "picocolors": "^1.1.1",
+    "undici": "^8.12.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsup": "^9.0.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

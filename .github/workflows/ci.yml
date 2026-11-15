@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:cli
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build -w @leakboy/web
+
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Start the vulnerable lab
+        run: |
+          node lab/server.ts &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:4000/ >/dev/null && break; sleep 0.5; done
+      - name: Run the action against it
+        id: leakboy
+        uses: ./
+        with:
+          target: http://127.0.0.1:4000
+          version: source
+          sarif: leakboy.sarif
+      - name: The lab must get an F
+        run: |
+          test "${{ steps.leakboy.outputs.grade }}" = "F"
+          test -s leakboy.sarif

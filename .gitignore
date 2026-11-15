@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.next/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.env
+.env.*
+!.env.example
+.vercel
+*.sarif
+leakboy-report.*
+packages/leakboy/README.md
+packages/leakboy/LICENSE

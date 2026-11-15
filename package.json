@@ -1,0 +1,23 @@
+{
+  "name": "leakboy-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w leakboy && npm run build -w @leakboy/web",
+    "build:cli": "npm run build -w leakboy",
+    "test": "npm test -w leakboy",
+    "typecheck": "npm run typecheck -w leakboy && npm run typecheck -w @leakboy/web",
+    "lab": "node lab/server.ts",
+    "dev:web": "npm run dev -w @leakboy/web"
+  },
+  "engines": {
+    "node": ">=22.19"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
