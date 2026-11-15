@@ -58,7 +58,11 @@ Grades: A ≥ 90, B ≥ 80, C ≥ 65, D ≥ 50, F below that. The JSON output li
 
 ## Web version
 
-**[leakboy.vercel.app](https://leakboy.vercel.app)**: paste a URL and get the report with a shareable link and a README badge:
+`apps/web` is a Next.js site: paste a URL and get the report with a shareable link and a README badge. Hosted at
+**[leakboy.vercel.app](https://leakboy.vercel.app)**, or deploy your own:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FEmil-02%2Fleakboy&root-directory=apps%2Fweb&project-name=leakboy)
+
 
 ```markdown
 [![leakboy](https://leakboy.vercel.app/api/badge?url=https://your-app.com)](https://leakboy.vercel.app/?url=https://your-app.com)
