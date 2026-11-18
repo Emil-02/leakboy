@@ -8,6 +8,8 @@
 
 🇮🇩 [Baca dalam Bahasa Indonesia](https://github.com/Emil-02/leakboy/blob/main/README.id.md)
 
+> **Using an AI coding agent?** Install [`jaga-skill`](https://github.com/Emil-02/jaga-skill) with `npx jaga-skill init` — a gate that stops the agent before commit/deploy when secrets or personal data are detected. `leakboy` is part of the checks behind it.
+
 ```sh
 npx leakboy https://your-app.vercel.app
 ```
