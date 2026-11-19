@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         ? err.status
         : (err as Error).name === "TargetBlockedError"
           ? 422
-          : /private|local|only ports|only http|credentials/.test(message)
+          : /private|local|only ports|only http|credentials|ENOTFOUND/.test(message)
             ? 400
             : 502;
     return NextResponse.json({ error: message }, { status, headers: { "cache-control": "no-store" } });

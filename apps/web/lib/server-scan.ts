@@ -1,3 +1,4 @@
+import { isIP } from "node:net";
 import { scan, normalizeUrl, type ScanResult } from "leakboy";
 
 const TTL_MS = 10 * 60 * 1000;
@@ -44,6 +45,11 @@ export function parseTarget(raw: string | null): string {
   }
   const u = new URL(url);
   if (u.protocol !== "https:" && u.protocol !== "http:") throw new UserError("Only http(s) URLs can be scanned.");
+  if (u.username || u.password) throw new UserError("URLs with credentials cannot be scanned.");
+  const host = u.hostname.replace(/^\[|\]$/g, "");
+  const localhost = host === "localhost" || host.endsWith(".localhost");
+  if (!host || (!isIP(host) && !host.includes(".") && !localhost)) throw new UserError("That does not look like a URL.");
+  if (u.port && u.port !== "80" && u.port !== "443") throw new UserError("Only ports 80 and 443 can be scanned.");
   return `${u.protocol}//${u.host}${u.pathname}${u.search}`;
 }
 

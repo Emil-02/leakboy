@@ -3,7 +3,6 @@
 **Find the leaks in your vibe-coded app before someone else does.**
 
 [![CI](https://github.com/Emil-02/leakboy/actions/workflows/ci.yml/badge.svg)](https://github.com/Emil-02/leakboy/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/leakboy)](https://www.npmjs.com/package/leakboy)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Emil-02/leakboy/blob/main/LICENSE)
 
 🇮🇩 [Baca dalam Bahasa Indonesia](https://github.com/Emil-02/leakboy/blob/main/README.id.md)
@@ -11,7 +10,9 @@
 > **Using an AI coding agent?** Install [`jaga-skill`](https://github.com/Emil-02/jaga-skill) with `npx jaga-skill init` — a gate that stops the agent before commit/deploy when secrets or personal data are detected. `leakboy` is part of the checks behind it.
 
 ```sh
-npx leakboy https://your-app.vercel.app
+git clone https://github.com/Emil-02/leakboy && cd leakboy
+npm ci && npm run build:cli
+node packages/leakboy/dist/cli.js https://your-app.vercel.app
 ```
 
 <p align="center"><img src="https://raw.githubusercontent.com/Emil-02/leakboy/main/docs/demo.svg" alt="leakboy scanning a vulnerable app: open Supabase table, Firebase database, Stripe and OpenAI keys in the bundle, public .env" width="760"></p>
@@ -40,17 +41,29 @@ Works with Next.js (pages and app router), Vite/React, Nuxt, SvelteKit, Astro, R
 
 ## Install & use
 
+The npm package is not published yet. Build the CLI from source and link it locally:
+
 ```sh
-npx leakboy https://your-app.vercel.app            # scan a deployed app
-npx leakboy ./dist                                 # scan a build folder before deploying (.next, dist, build, out)
-npx leakboy your-app.com --verbose                 # with explanations and fixes
-npx leakboy your-app.com --fail-under 80           # exit 1 when the score is below 80 (CI)
-npx leakboy your-app.com --markdown report.md --sarif leakboy.sarif
-npx leakboy your-app.com --only supabase,secrets   # secrets, supabase, firebase, exposure, headers
-npx leakboy your-app.com --json | jq .score
+git clone https://github.com/Emil-02/leakboy.git
+cd leakboy
+npm ci
+npm run build:cli
+alias leakboy="node $PWD/packages/leakboy/dist/cli.js"
 ```
 
-Requires Node.js 22.19 or newer. Exit codes: `0` ok, `1` below `--fail-under`, `2` error.
+Then:
+
+```sh
+leakboy https://your-app.vercel.app            # scan a deployed app
+leakboy ./dist                                 # scan a build folder before deploying (.next, dist, build, out)
+leakboy your-app.com --verbose                 # with explanations and fixes
+leakboy your-app.com --fail-under 80           # exit 1 when the score is below 80 (CI)
+leakboy your-app.com --markdown report.md --sarif leakboy.sarif
+leakboy your-app.com --only supabase,secrets   # secrets, supabase, firebase, exposure, headers
+leakboy your-app.com --json | jq .score
+```
+
+`npx leakboy …` will work once the package is published to npm. Requires Node.js 22.19 or newer. Exit codes: `0` ok, `1` below `--fail-under`, `2` error.
 
 ### Scoring
 
@@ -61,13 +74,13 @@ Grades: A ≥ 90, B ≥ 80, C ≥ 65, D ≥ 50, F below that. The JSON output li
 ## Web version
 
 `apps/web` is a Next.js site: paste a URL and get the report with a shareable link and a README badge. Hosted at
-**[leakboy.vercel.app](https://leakboy.vercel.app)**, or deploy your own:
+**[leakboy-web-et8r.vercel.app](https://leakboy-web-et8r.vercel.app)**, or deploy your own:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FEmil-02%2Fleakboy&root-directory=apps%2Fweb&project-name=leakboy)
 
 
 ```markdown
-[![leakboy](https://leakboy.vercel.app/api/badge?url=https://your-app.com)](https://leakboy.vercel.app/?url=https://your-app.com)
+[![leakboy](https://leakboy-web-et8r.vercel.app/api/badge?url=https://your-app.com)](https://leakboy-web-et8r.vercel.app/?url=https://your-app.com)
 ```
 
 The web version only scans public hosts on ports 80/443. Private and internal addresses are blocked, including after

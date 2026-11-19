@@ -5,7 +5,9 @@
 🇬🇧 [Read in English](README.md)
 
 ```sh
-npx leakboy https://aplikasi-kamu.vercel.app
+git clone https://github.com/Emil-02/leakboy && cd leakboy
+npm ci && npm run build:cli
+node packages/leakboy/dist/cli.js https://aplikasi-kamu.vercel.app
 ```
 
 <p align="center"><img src="https://raw.githubusercontent.com/Emil-02/leakboy/main/docs/demo.svg" alt="leakboy memindai aplikasi rentan" width="760"></p>
@@ -33,21 +35,33 @@ bahasa sederhana, dan contoh perbaikan siap salin untuk setiap temuan.
 
 ## Pemakaian
 
+Paket npm-nya belum dipublikasikan. Build CLI dari source lalu tautkan secara lokal:
+
 ```sh
-npx leakboy https://aplikasi-kamu.vercel.app      # pindai aplikasi yang sudah deploy
-npx leakboy ./dist                                # pindai folder build sebelum deploy
-npx leakboy aplikasi.com --verbose                # dengan penjelasan dan cara perbaikan
-npx leakboy aplikasi.com --fail-under 80          # exit 1 kalau skor < 80 (untuk CI)
-npx leakboy aplikasi.com --markdown laporan.md --sarif leakboy.sarif
+git clone https://github.com/Emil-02/leakboy.git
+cd leakboy
+npm ci
+npm run build:cli
+alias leakboy="node $PWD/packages/leakboy/dist/cli.js"
 ```
 
-Butuh Node.js 22.19 atau lebih baru.
+Lalu:
+
+```sh
+leakboy https://aplikasi-kamu.vercel.app      # pindai aplikasi yang sudah deploy
+leakboy ./dist                                # pindai folder build sebelum deploy
+leakboy aplikasi.com --verbose                # dengan penjelasan dan cara perbaikan
+leakboy aplikasi.com --fail-under 80          # exit 1 kalau skor < 80 (untuk CI)
+leakboy aplikasi.com --markdown laporan.md --sarif leakboy.sarif
+```
+
+`npx leakboy …` akan berfungsi setelah paketnya dipublikasikan ke npm. Butuh Node.js 22.19 atau lebih baru.
 
 **Skor:** critical −40, high −20, medium −8, low −3. **Satu temuan critical saja langsung membuat grade F.**
 
 ## Versi web & GitHub Action
 
-- Web: **[leakboy.vercel.app](https://leakboy.vercel.app)**. Tempel URL, lalu dapat laporan dan badge untuk README.
+- Web: **[leakboy-web-et8r.vercel.app](https://leakboy-web-et8r.vercel.app)**. Tempel URL, lalu dapat laporan dan badge untuk README.
 - GitHub Action: lihat [README bahasa Inggris](README.md#github-action).
 
 ## Keamanan & etika

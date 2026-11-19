@@ -36,9 +36,9 @@ export default function Home() {
       </section>
       <section className="cli">
         <h2>Run it locally or in CI</h2>
-        <pre>{`npx leakboy https://myapp.vercel.app
-npx leakboy ./dist                  # check a build before deploying
-npx leakboy myapp.com --fail-under 80 --sarif leakboy.sarif`}</pre>
+        <pre>{`# npm package coming soon — run from source for now
+npm ci && npm run build:cli
+node packages/leakboy/dist/cli.js myapp.com --fail-under 80 --sarif leakboy.sarif`}</pre>
       </section>
       <footer>
         leakboy is passive and read-only: it never writes data, never shows row contents and masks every secret. Only
