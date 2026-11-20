@@ -1,5 +1,7 @@
 # leakboy 🤠
 
+[![jaga](https://jaga-card.vercel.app/api/badge?owner=Emil-02&repo=leakboy)](https://jaga-card.vercel.app/r/Emil-02/leakboy)
+
 **Find the leaks in your vibe-coded app before someone else does.**
 
 [![CI](https://github.com/Emil-02/leakboy/actions/workflows/ci.yml/badge.svg)](https://github.com/Emil-02/leakboy/actions/workflows/ci.yml)
