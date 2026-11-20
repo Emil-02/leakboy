@@ -7,7 +7,7 @@
 
 🇮🇩 [Baca dalam Bahasa Indonesia](https://github.com/Emil-02/leakboy/blob/main/README.id.md)
 
-> **Using an AI coding agent?** Install [`jaga-skill`](https://github.com/Emil-02/jaga-skill) with `npx jaga-skill init` — a gate that stops the agent before commit/deploy when secrets or personal data are detected. `leakboy` is part of the checks behind it.
+> **Using an AI coding agent?** Install [`jaga-skill`](https://github.com/Emil-02/jaga/tree/main/skills/jaga-skill) with `npx jaga-skill init` — a gate that stops the agent before commit/deploy when secrets or personal data are detected. `leakboy` is part of the checks behind it.
 
 ```sh
 git clone https://github.com/Emil-02/leakboy && cd leakboy
